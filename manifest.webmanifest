@@ -1,0 +1,18 @@
+{
+  "name": "Wer ist weg?",
+  "short_name": "Wer ist weg",
+  "description": "Privater Follower-Check: wer dir entfolgt ist und wer nicht zurückfolgt.",
+  "lang": "de",
+  "start_url": "./wer-ist-weg.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#24204a",
+  "theme_color": "#24204a",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

@@ -1,0 +1,1070 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Wer ist weg">
+<meta name="theme-color" content="#24204a">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>Wer ist weg?</title>
+<style>
+:root {
+  --bg: #f5f4f0;
+  --card: #ffffff;
+  --card-2: #f0eee8;
+  --text: #1b1a22;
+  --muted: #6b6878;
+  --line: #e3e0d8;
+  --brand: #24204a;
+  --brand-text: #f5f3ff;
+  --accent: #d93a53;
+  --accent-soft: #fde8eb;
+  --ok: #23845a;
+  --ok-soft: #e1f3ea;
+  --warn: #9a5b00;
+  --warn-soft: #fff1d6;
+  --focus: #5b4fd6;
+  --shadow: 0 1px 2px rgba(20, 16, 40, .06), 0 4px 16px rgba(20, 16, 40, .05);
+  --radius: 16px;
+  --safe-t: env(safe-area-inset-top, 0px);
+  --safe-r: env(safe-area-inset-right, 0px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-l: env(safe-area-inset-left, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111015;
+    --card: #1c1a23;
+    --card-2: #25222e;
+    --text: #f0eef5;
+    --muted: #a19dae;
+    --line: #322e3c;
+    --brand: #1a1636;
+    --accent: #ff6b80;
+    --accent-soft: #3a1c24;
+    --ok: #5fd29c;
+    --ok-soft: #173126;
+    --warn: #ffc562;
+    --warn-soft: #362a12;
+    --focus: #a59bff;
+    --shadow: none;
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.45 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  padding: 0 var(--safe-r) var(--safe-b) var(--safe-l);
+  overflow-x: hidden;
+}
+/* Streifen unter der Statusleiste/Notch, damit weiße Statusleisten-Schrift immer lesbar bleibt */
+.notch { position: fixed; top: 0; left: 0; right: 0; height: var(--safe-t); background: var(--brand); z-index: 60; }
+header.top {
+  background: var(--brand);
+  color: var(--brand-text);
+  padding: calc(var(--safe-t) + 14px) 16px 18px;
+}
+.top-inner, main { max-width: 560px; margin: 0 auto; }
+.top-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+h1 { margin: 0; font-size: 26px; letter-spacing: -.02em; }
+.sub { margin: 2px 0 0; opacity: .75; font-size: 14px; }
+.store {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; padding: 4px 10px; border-radius: 999px;
+  background: rgba(255,255,255,.12); white-space: nowrap;
+}
+.store i { width: 8px; height: 8px; border-radius: 50%; background: #5fd29c; display: inline-block; }
+.store.bad i { background: #ff6b80; }
+main { padding: 16px 16px 40px; }
+.card {
+  background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 18px 16px; margin: 0 0 16px; border: 1px solid var(--line);
+}
+h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 10px; font-weight: 600; }
+h3 { font-size: 17px; margin: 0 0 6px; }
+p { margin: 0 0 10px; }
+.muted { color: var(--muted); }
+.small { font-size: 14px; }
+.tiny { font-size: 13px; }
+.hero-title { font-size: 22px; font-weight: 700; letter-spacing: -.01em; margin: 0 0 12px; }
+.big-empty { font-size: 24px; font-weight: 700; margin: 6px 0 4px; }
+a { color: inherit; }
+button, .btn {
+  font: inherit; font-size: 16px; font-weight: 600;
+  min-height: 44px; padding: 10px 16px; border-radius: 12px;
+  border: 1px solid var(--line); background: var(--card-2); color: var(--text);
+  cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation; text-decoration: none;
+}
+button:active { transform: scale(.98); }
+button:disabled { opacity: .45; cursor: default; transform: none; }
+button.primary { background: var(--brand); color: var(--brand-text); border-color: transparent; }
+@media (prefers-color-scheme: dark) { button.primary { background: var(--focus); color: #120f24; } }
+button.danger { color: var(--accent); }
+button.armed { background: var(--accent); color: #fff; border-color: transparent; }
+button.ghost { background: transparent; }
+button.sm { min-height: 44px; padding: 6px 12px; font-size: 14px; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.row > .grow { flex: 1 1 auto; }
+.stack > * + * { margin-top: 10px; }
+.full { width: 100%; }
+
+/* Entfolgt-Liste */
+.gone { list-style: none; margin: 0; padding: 0; }
+.gone li { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-top: 1px solid var(--line); min-height: 44px; flex-wrap: wrap; }
+.gone li:first-child { border-top: 0; }
+.gone a { font-size: 20px; font-weight: 700; text-decoration: line-through; text-decoration-thickness: 2px; text-decoration-color: var(--accent); color: var(--text); padding: 6px 0; word-break: break-all; }
+.badge { font-size: 12px; font-weight: 600; padding: 3px 9px; border-radius: 999px; background: var(--warn-soft); color: var(--warn); white-space: nowrap; }
+.badge.ok { background: var(--ok-soft); color: var(--ok); }
+.badge.red { background: var(--accent-soft); color: var(--accent); }
+.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+.tile { background: var(--card-2); border-radius: 12px; padding: 12px; }
+.tile .lbl { font-size: 13px; color: var(--muted); }
+.tile .num { font-size: 28px; font-weight: 700; letter-spacing: -.02em; line-height: 1.15; }
+.delta { font-size: 14px; font-weight: 600; }
+.delta.up { color: var(--ok); } .delta.down { color: var(--accent); } .delta.zero { color: var(--muted); }
+
+/* Namenslisten */
+.names { list-style: none; margin: 0; padding: 0; }
+.names li { display: flex; align-items: center; justify-content: space-between; gap: 8px; border-top: 1px solid var(--line); min-height: 52px; }
+.names li:first-child { border-top: 0; }
+.names a { flex: 1 1 auto; min-width: 0; padding: 12px 0; text-decoration: none; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.names a::before { content: "@"; color: var(--muted); font-weight: 400; }
+details summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; font-weight: 600; color: var(--muted); list-style: none; }
+details summary::-webkit-details-marker { display: none; }
+details summary::before { content: "▸"; margin-right: 8px; transition: transform .15s; }
+details[open] summary::before { transform: rotate(90deg); }
+.filter { margin-bottom: 8px; }
+
+/* Tabs */
+.tabs { display: flex; gap: 4px; background: var(--card-2); padding: 4px; border-radius: 12px; margin-bottom: 14px; }
+.tabs button { flex: 1 1 0; border: 0; background: transparent; font-size: 15px; padding: 8px 6px; min-height: 44px; color: var(--muted); }
+.tabs button[aria-selected="true"] { background: var(--card); color: var(--text); box-shadow: var(--shadow); }
+[hidden] { display: none !important; }
+
+label { display: block; font-weight: 600; font-size: 14px; margin: 0 0 6px; }
+textarea, input[type="number"], input[type="search"], input[type="text"] {
+  width: 100%; font: inherit; font-size: 16px; color: var(--text);
+  background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; min-height: 44px;
+}
+textarea { min-height: 120px; resize: vertical; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 16px; }
+.file-btn { position: relative; overflow: hidden; }
+.file-btn input[type="file"] { position: absolute; inset: 0; opacity: 0; font-size: 16px; cursor: pointer; }
+.drop { border: 2px dashed var(--line); border-radius: 14px; padding: 16px; text-align: center; }
+.notice { border-radius: 12px; padding: 10px 12px; font-size: 14px; margin: 10px 0 0; }
+.notice.warn { background: var(--warn-soft); color: var(--warn); }
+.notice.err { background: var(--accent-soft); color: var(--accent); }
+.notice.ok { background: var(--ok-soft); color: var(--ok); }
+.notice.info { background: var(--card-2); color: var(--text); }
+.notice ul { margin: 4px 0 0; padding-left: 18px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.count-line { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 6px; }
+.count-line strong { font-size: 22px; }
+
+/* Verlauf */
+.hist { list-style: none; margin: 0; padding: 0; }
+.hist li { border-top: 1px solid var(--line); padding: 12px 0; }
+.hist li:first-child { border-top: 0; padding-top: 0; }
+.hist .meta { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; }
+.hist .when { font-weight: 700; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.chip { font-size: 13px; padding: 4px 10px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); text-decoration: line-through; word-break: break-all; }
+.chip.plain { text-decoration: none; background: var(--card-2); color: var(--muted); }
+.toast {
+  position: fixed; left: 50%; transform: translateX(-50%);
+  bottom: calc(var(--safe-b) + 16px); z-index: 80;
+  background: var(--text); color: var(--bg); padding: 12px 16px; border-radius: 12px;
+  font-size: 15px; max-width: calc(100% - 32px); width: max-content; box-shadow: 0 6px 24px rgba(0,0,0,.25);
+}
+.progress { height: 6px; border-radius: 3px; background: var(--card-2); overflow: hidden; margin-top: 10px; }
+.progress > div { height: 100%; width: 0; background: var(--focus); transition: width .2s; }
+footer { text-align: center; color: var(--muted); font-size: 13px; padding: 8px 16px 24px; }
+</style>
+</head>
+<body>
+<div class="notch" aria-hidden="true"></div>
+<header class="top">
+  <div class="top-inner">
+    <div class="top-row">
+      <div>
+        <h1>Wer ist weg?</h1>
+        <p class="sub">Dein privater Follower-Check</p>
+      </div>
+      <span id="storeBadge" class="store" role="status"><i></i><span>…</span></span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div id="storeWarn" class="notice warn" hidden style="margin:0 0 16px">
+    <strong>Achtung:</strong> Der Browser-Speicher funktioniert hier gerade nicht. Deine Checks gehen beim Schließen verloren. Speicher nach jedem Check ein Backup (ganz unten).
+  </div>
+  <div id="installTip" class="notice info" hidden style="margin:0 0 16px">
+    <div class="row"><span class="grow">Tipp: Tipp unten auf <strong>Teilen</strong> → <strong>Zum Home-Bildschirm</strong>, dann läuft die App wie eine echte App, auch offline.</span>
+    <button class="sm ghost" id="installTipClose" aria-label="Tipp ausblenden">✕</button></div>
+  </div>
+
+  <!-- Ergebnis -->
+  <section id="resultCard" class="card" hidden>
+    <h2>Seit dem letzten Check entfolgt</h2>
+    <div id="goneBox"></div>
+    <div class="tiles" id="tiles"></div>
+    <p class="tiny muted" id="resultMeta" style="margin:12px 0 0"></p>
+  </section>
+
+  <section id="welcomeCard" class="card">
+    <h3>Hey 👋</h3>
+    <p class="small">Lies unten deine Follower ein. Beim nächsten Check siehst du dann, wer seitdem weg ist. Alles bleibt auf deinem Handy, nichts wird hochgeladen.</p>
+  </section>
+
+  <!-- Folgt nicht zurück -->
+  <section id="notBackCard" class="card" hidden>
+    <h2>Folgt dir nicht zurück <span id="notBackCount"></span></h2>
+    <input type="search" id="notBackFilter" class="filter" placeholder="Suchen …" aria-label="Liste durchsuchen" autocomplete="off" autocapitalize="off" spellcheck="false" hidden>
+    <ul class="names" id="notBackList"></ul>
+    <p id="notBackEmpty" class="muted small" hidden>Alle, denen du folgst, folgen dir auch. Nice.</p>
+    <details id="ignoredBox" style="margin-top:10px">
+      <summary id="ignoredSummary">Ignoriert (0)</summary>
+      <p class="tiny muted">Promis, Marken, Medien: Die zählen hier nicht mit.</p>
+      <ul class="names" id="ignoredList"></ul>
+    </details>
+  </section>
+
+  <!-- Neuer Check -->
+  <section id="inputCard" class="card">
+    <h2>Neuer Check</h2>
+    <div class="tabs" role="tablist" aria-label="Datenquelle">
+      <button role="tab" id="tab-export" aria-controls="pane-export" aria-selected="true">Export</button>
+      <button role="tab" id="tab-text" aria-controls="pane-text" aria-selected="false">Text</button>
+      <button role="tab" id="tab-ocr" aria-controls="pane-ocr" aria-selected="false" hidden>Screenshots</button>
+    </div>
+
+    <div role="tabpanel" id="pane-export" aria-labelledby="tab-export">
+      <p class="small">In Instagram: <strong>Kontenübersicht → Deine Informationen herunterladen</strong> → nur <strong>„Follower und gefolgte Personen"</strong> wählen, Format <strong>JSON</strong>. Die ZIP dann hier auswählen.</p>
+      <div class="drop">
+        <span class="btn file-btn primary full">ZIP oder JSON/HTML auswählen
+          <input type="file" id="exportFiles" multiple accept=".zip,.json,.html,.htm,application/zip,application/json,text/html">
+        </span>
+        <p class="tiny muted" style="margin:8px 0 0">Mehrere Dateien gehen auch, z. B. followers_1.json, followers_2.json und following.json.</p>
+      </div>
+      <div id="exportMsg"></div>
+    </div>
+
+    <div role="tabpanel" id="pane-text" aria-labelledby="tab-text" hidden>
+      <p class="small">Namen einfach reinkopieren, getrennt durch Zeilenumbruch, Leerzeichen oder Komma. Ein @ davor ist egal.</p>
+      <label for="txtFollowers">Deine Follower</label>
+      <textarea id="txtFollowers" placeholder="anna.m&#10;@ben_92&#10;…" autocapitalize="off" autocorrect="off" spellcheck="false"></textarea>
+      <label for="txtFollowing" style="margin-top:12px">Denen du folgst <span class="muted" style="font-weight:400">(leer lassen = vom letzten Check übernehmen)</span></label>
+      <textarea id="txtFollowing" placeholder="…" autocapitalize="off" autocorrect="off" spellcheck="false"></textarea>
+      <button class="primary full" id="txtGo" style="margin-top:12px">Weiter zur Vorschau</button>
+      <div id="textMsg"></div>
+    </div>
+
+    <div role="tabpanel" id="pane-ocr" aria-labelledby="tab-ocr" hidden>
+      <div class="notice warn" style="margin:0 0 12px">
+        Ehrlich gesagt: Die Texterkennung ist nicht perfekt. Sie verwechselt gern mal Buchstaben (l/1, o/0) oder schneidet lange Namen ab. Check die Namen in der Vorschau. Der Export ist deutlich zuverlässiger.
+      </div>
+      <p class="small">Dafür lädt die App einmalig die Erkennungs-Software (tesseract.js, ca. 10–15 MB) aus dem Internet. Deine Bilder bleiben auf dem Handy und werden nicht hochgeladen.</p>
+      <div class="stack">
+        <span class="btn file-btn full">Screenshots: Follower <span id="ocrFolN" class="muted"></span>
+          <input type="file" id="ocrFollowers" multiple accept="image/*">
+        </span>
+        <span class="btn file-btn full">Screenshots: Gefolgt (optional) <span id="ocrFingN" class="muted"></span>
+          <input type="file" id="ocrFollowing" multiple accept="image/*">
+        </span>
+        <button class="primary full" id="ocrGo" disabled>Texterkennung starten</button>
+      </div>
+      <div class="progress" id="ocrProg" hidden><div></div></div>
+      <p class="tiny muted" id="ocrStatus" style="margin:6px 0 0"></p>
+      <div id="ocrMsg"></div>
+    </div>
+  </section>
+
+  <!-- Vorschau -->
+  <section id="previewCard" class="card" hidden>
+    <h2>Vorschau – bitte kurz checken</h2>
+    <p class="small muted" id="pvSource"></p>
+    <div class="grid2">
+      <div class="tile">
+        <div class="lbl">Follower erkannt</div>
+        <div class="num" id="pvFolN">0</div>
+      </div>
+      <div class="tile">
+        <div class="lbl">Gefolgt erkannt</div>
+        <div class="num" id="pvFingN">0</div>
+        <div class="tiny" id="pvFingNote"></div>
+      </div>
+    </div>
+    <p class="small" style="margin:14px 0 6px"><strong>Optional:</strong> Zahlen aus deinem Profil eintragen, dann sehe ich, ob was fehlt.</p>
+    <div class="grid2">
+      <div><label for="pvExpFol">Follower laut Profil</label><input type="number" id="pvExpFol" inputmode="numeric" min="0"></div>
+      <div><label for="pvExpFing">Gefolgt laut Profil</label><input type="number" id="pvExpFing" inputmode="numeric" min="0"></div>
+    </div>
+    <div id="pvWarn"></div>
+    <details style="margin-top:12px">
+      <summary>Namen ansehen &amp; korrigieren</summary>
+      <label for="pvFollowers">Follower (ein Name pro Zeile)</label>
+      <textarea id="pvFollowers" autocapitalize="off" autocorrect="off" spellcheck="false"></textarea>
+      <label for="pvFollowing" style="margin-top:12px">Gefolgt (leer = vom letzten Check übernehmen)</label>
+      <textarea id="pvFollowing" autocapitalize="off" autocorrect="off" spellcheck="false"></textarea>
+    </details>
+    <div class="row" style="margin-top:14px">
+      <button class="ghost" id="pvCancel">Verwerfen</button>
+      <button class="primary grow" id="pvSave">Check speichern</button>
+    </div>
+  </section>
+
+  <!-- Verlauf -->
+  <section id="historyCard" class="card" hidden>
+    <h2>Verlauf</h2>
+    <ul class="hist" id="histList"></ul>
+  </section>
+
+  <!-- Backup -->
+  <section class="card" id="backupCard">
+    <h2>Backup</h2>
+    <p class="small muted">Sicher ist sicher: Der Browser kann gespeicherte Daten auch mal löschen. Ein Backup landet als JSON-Datei z. B. in „Dateien".</p>
+    <div class="row">
+      <button class="grow" id="bkExport">Backup exportieren</button>
+      <button class="grow" id="bkShare" hidden>Teilen …</button>
+      <span class="btn file-btn grow">Backup importieren
+        <input type="file" id="bkImport" accept=".json,application/json">
+      </span>
+    </div>
+    <div id="bkPanel"></div>
+  </section>
+</main>
+<footer>Läuft komplett lokal. Kein Login, kein Server, kein Tracking.</footer>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+<script>
+'use strict';
+/* ==================== CORE START ====================
+   Reine Logik ohne DOM, wird auch von den Node-Tests geladen. */
+
+/* Startdaten: Beim allerersten Start wird diese Ignorier-Liste übernommen.
+   Leeres Array = nichts vorbelegen. */
+const SEED = {
+  ignored: []
+};
+
+const STORE_KEY = 'werIstWeg.v1';
+const USER_RE = /^[a-z0-9._]{1,30}$/;
+const HREF_RE = /instagram\.com\/(?:_u\/)?([A-Za-z0-9._]+)/i;
+const RELEVANT_RE = /(^|\/)(followers_\d+|following)\.(json|html)$/i;
+const RESERVED = new Set(['accounts', 'explore', 'p', 'reel', 'reels', 'stories', 'direct', 'tv', 'about', 'legal', 'developer', 'web', 'privacy', 'help', 'emails', 'challenge', 'oauth', 'session', 'login', 'logout', '_u', '_n']);
+
+function normUser(s) {
+  if (typeof s !== 'string') return null;
+  const n = s.trim().replace(/^@+/, '').toLowerCase();
+  return USER_RE.test(n) ? n : null;
+}
+function uniqNorm(arr) {
+  const set = new Set();
+  for (const x of arr || []) { const n = normUser(x); if (n) set.add(n); }
+  return [...set];
+}
+function parseTextList(text) {
+  return uniqNorm(String(text || '').split(/[\s,;]+/));
+}
+function userFromHref(href) {
+  const m = HREF_RE.exec(String(href || ''));
+  if (!m) return null;
+  const n = normUser(m[1]);
+  return n && !RESERVED.has(n) ? n : null;
+}
+function classifyPath(path) {
+  const m = RELEVANT_RE.exec(String(path || ''));
+  if (!m) return null;
+  return { kind: /^followers/i.test(m[2]) ? 'followers' : 'following', fmt: m[3].toLowerCase() };
+}
+/* Liest alle Objekte mit string_list_data, egal wie tief verschachtelt.
+   Username = value || title || aus href */
+function parseIgJson(data) {
+  const out = [];
+  const walk = (o, depth) => {
+    if (!o || typeof o !== 'object' || depth > 40) return;
+    if (Array.isArray(o)) { for (const x of o) walk(x, depth + 1); return; }
+    if (Array.isArray(o.string_list_data)) {
+      for (const e of o.string_list_data) {
+        if (!e || typeof e !== 'object') continue;
+        // value (alt) > Username aus href (eindeutig) > title (neu; zur Sicherheit erst danach)
+        const n = normUser(e.value) || userFromHref(e.href) || normUser(o.title);
+        if (n && !RESERVED.has(n)) out.push(n);
+      }
+    }
+    for (const k of Object.keys(o)) if (k !== 'string_list_data') walk(o[k], depth + 1);
+  };
+  walk(data, 0);
+  return uniqNorm(out);
+}
+function parseIgHtml(html) {
+  const out = [];
+  const re = /href\s*=\s*["']?(https?:\/\/(?:www\.)?instagram\.com\/[^"'\s>]+)/gi;
+  let m;
+  while ((m = re.exec(String(html || '')))) {
+    const n = userFromHref(m[1]);
+    if (n) out.push(n);
+  }
+  return uniqNorm(out);
+}
+function parseContent(fmt, text) {
+  if (fmt === 'json') {
+    let data;
+    try { data = JSON.parse(text); } catch (e) { throw new Error('JSON kaputt oder unvollständig'); }
+    return parseIgJson(data);
+  }
+  return parseIgHtml(text);
+}
+
+/* ---------- Mini-ZIP-Parser (ohne ZIP64) ---------- */
+class ZipError extends Error {}
+/* read(offset, length) -> Promise<Uint8Array>; size = Gesamtgröße */
+async function zipListEntries(read, size) {
+  if (size < 22) throw new ZipError('Die Datei ist zu klein für eine ZIP.');
+  const tailLen = Math.min(size, 22 + 65535);
+  const tail = await read(size - tailLen, tailLen);
+  const tv = new DataView(tail.buffer, tail.byteOffset, tail.byteLength);
+  let e = -1;
+  for (let i = tail.length - 22; i >= 0; i--) {
+    if (tv.getUint32(i, true) === 0x06054b50) { e = i; break; }
+  }
+  if (e < 0) throw new ZipError('Das sieht nicht nach einer ZIP aus (kein Inhaltsverzeichnis gefunden). Vielleicht ist der Download unvollständig?');
+  const total = tv.getUint16(e + 10, true);
+  const cdSize = tv.getUint32(e + 12, true);
+  const cdOff = tv.getUint32(e + 16, true);
+  const hasZip64Locator = e >= 20 && tv.getUint32(e - 20, true) === 0x07064b50;
+  if (hasZip64Locator || total === 0xFFFF || cdSize === 0xFFFFFFFF || cdOff === 0xFFFFFFFF) {
+    throw new ZipError('Diese ZIP ist im ZIP64-Format (sehr groß oder sehr viele Dateien). Das kann die App nicht lesen. Entpack die ZIP in der Dateien-App und wähl followers_1.json und following.json direkt aus. Oder exportier bei Instagram nur „Follower und gefolgte Personen", dann ist die ZIP klein.');
+  }
+  if (cdOff + cdSize > size) throw new ZipError('Die ZIP ist beschädigt oder unvollständig.');
+  const cd = await read(cdOff, cdSize);
+  const dv = new DataView(cd.buffer, cd.byteOffset, cd.byteLength);
+  const dec = new TextDecoder();
+  const entries = [];
+  let p = 0;
+  for (let i = 0; i < total; i++) {
+    if (p + 46 > cd.length || dv.getUint32(p, true) !== 0x02014b50) throw new ZipError('Das Inhaltsverzeichnis der ZIP ist beschädigt.');
+    const nl = dv.getUint16(p + 28, true), el = dv.getUint16(p + 30, true), cl = dv.getUint16(p + 32, true);
+    entries.push({
+      name: dec.decode(cd.subarray(p + 46, p + 46 + nl)),
+      flags: dv.getUint16(p + 8, true),
+      method: dv.getUint16(p + 10, true),
+      compSize: dv.getUint32(p + 20, true),
+      size: dv.getUint32(p + 24, true),
+      offset: dv.getUint32(p + 42, true)
+    });
+    p += 46 + nl + el + cl;
+  }
+  return entries;
+}
+async function zipReadEntry(read, entry, inflateRaw) {
+  if (entry.flags & 1) throw new ZipError('„' + entry.name + '" ist verschlüsselt.');
+  const lh = await read(entry.offset, 30);
+  const lv = new DataView(lh.buffer, lh.byteOffset, lh.byteLength);
+  if (lh.length < 30 || lv.getUint32(0, true) !== 0x04034b50) throw new ZipError('Die ZIP ist beschädigt (Datei-Header fehlt).');
+  const start = entry.offset + 30 + lv.getUint16(26, true) + lv.getUint16(28, true);
+  const data = await read(start, entry.compSize);
+  if (entry.method === 0) return data;
+  if (entry.method === 8) return inflateRaw(data);
+  throw new ZipError('„' + entry.name + '" nutzt eine Komprimierung (' + entry.method + '), die die App nicht kennt.');
+}
+async function inflateRawStream(data) {
+  if (typeof DecompressionStream === 'undefined') {
+    throw new ZipError('Dein Browser kann keine ZIPs entpacken. Entpack sie in der Dateien-App und wähl die JSON-Dateien direkt aus.');
+  }
+  const stream = new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+  return new Uint8Array(await new Response(stream).arrayBuffer());
+}
+
+/* files: [{name, size, read(off,len)}] -> {followers, following, notes, sawFollowers, sawFollowing} */
+async function importFiles(files, inflateRaw) {
+  const fol = new Set(), fing = new Set(), notes = [];
+  let sawFollowers = false, sawFollowing = false;
+  const dec = new TextDecoder();
+  const take = (cls, text, label) => {
+    try {
+      const names = parseContent(cls.fmt, text);
+      for (const n of names) (cls.kind === 'followers' ? fol : fing).add(n);
+      if (cls.kind === 'followers') sawFollowers = true; else sawFollowing = true;
+    } catch (e) {
+      notes.push({ type: 'err', text: label + ': ' + e.message });
+    }
+  };
+  for (const f of files) {
+    const lower = f.name.toLowerCase();
+    try {
+      if (lower.endsWith('.zip')) {
+        const entries = await zipListEntries(f.read, f.size);
+        let hits = 0;
+        for (const en of entries) {
+          const cls = classifyPath(en.name);
+          if (!cls) continue;
+          hits++;
+          const bytes = await zipReadEntry(f.read, en, inflateRaw);
+          take(cls, dec.decode(bytes), en.name.split('/').pop());
+        }
+        if (!hits) notes.push({ type: 'warn', text: f.name + ': keine followers_*.json oder following.json drin. Hast du beim Export „Follower und gefolgte Personen" ausgewählt?' });
+      } else {
+        const cls = classifyPath(f.name);
+        if (!cls) { notes.push({ type: 'warn', text: f.name + ' übersprungen (brauche followers_1.json, following.json o. Ä.)' }); continue; }
+        const bytes = await f.read(0, f.size);
+        take(cls, dec.decode(bytes), f.name);
+      }
+    } catch (e) {
+      notes.push({ type: 'err', text: f.name + ': ' + (e && e.message || e) });
+    }
+  }
+  return { followers: [...fol], following: [...fing], notes, sawFollowers, sawFollowing };
+}
+
+/* Texterkennung -> Kandidaten. Usernames sind bei Instagram immer klein geschrieben. */
+const OCR_STOP = new Set(['folgen', 'gefolgt', 'entfernen', 'nachricht', 'follower', 'abonniert', 'abonnieren', 'follow', 'following', 'followers', 'remove', 'message', 'alle', 'suchen', 'search', 'sortiert', 'nach', 'standard', 'für', 'dich', 'und', 'mehr', 'ansehen', 'vorschläge', 'kategorien', 'konten', 'zurückfolgen', 'requested', 'angefragt', 'verifiziert', 'gestern', 'heute']);
+function parseOcrText(text) {
+  const out = [];
+  for (const raw of String(text || '').split(/\s+/)) {
+    let t = raw.replace(/^[@•·|"'«»(\[]+/, '').replace(/[,:;!?)\]"'»…]+$/, '').replace(/\.+$/, '');
+    if (!/^[a-z0-9._]{3,30}$/.test(t)) continue;      // Großbuchstaben = Anzeigename -> raus
+    if (!/[a-z]/.test(t) || OCR_STOP.has(t)) continue;
+    out.push(t);
+  }
+  return uniqNorm(out);
+}
+
+/* ---------- Zustand & Diff ---------- */
+function emptyState() { return { version: 1, checks: [], ignored: [], seeded: false }; }
+function sanitizeState(o) {
+  const s = emptyState();
+  if (!o || typeof o !== 'object') return s;
+  if (Array.isArray(o.checks)) {
+    for (const c of o.checks) {
+      if (!c || typeof c !== 'object') continue;
+      const ts = Number(c.ts);
+      if (!isFinite(ts)) continue;
+      s.checks.push({
+        id: String(c.id || ('c' + ts)).slice(0, 60),
+        ts,
+        source: String(c.source || '?').slice(0, 40),
+        followers: uniqNorm(c.followers),
+        following: uniqNorm(c.following),
+        followingCarried: !!c.followingCarried
+      });
+    }
+  }
+  s.checks.sort((a, b) => a.ts - b.ts);
+  s.ignored = uniqNorm(o.ignored);
+  s.seeded = !!o.seeded;
+  return s;
+}
+function applySeed(state, seed) {
+  if (state.seeded) return state;
+  state.ignored = uniqNorm([...state.ignored, ...((seed && seed.ignored) || [])]);
+  state.seeded = true;
+  return state;
+}
+function mergeStates(a, b) {
+  const map = new Map();
+  for (const c of a.checks) map.set(c.id, c);
+  for (const c of b.checks) if (!map.has(c.id)) map.set(c.id, c);
+  return sanitizeState({ checks: [...map.values()], ignored: [...a.ignored, ...b.ignored], seeded: a.seeded || b.seeded });
+}
+function minus(a, b) { const B = new Set(b); return a.filter(x => !B.has(x)); }
+function makeCheck(state, { followers, following, source, now }) {
+  const ts = now || Date.now();
+  const last = state.checks[state.checks.length - 1];
+  const fol = uniqNorm(followers);
+  let fing = uniqNorm(following), carried = false;
+  if (!fing.length && last && last.following.length) { fing = last.following.slice(); carried = true; }
+  return { id: 'c' + ts.toString(36) + Math.random().toString(36).slice(2, 7), ts, source, followers: fol, following: fing, followingCarried: carried };
+}
+function summarize(state) {
+  const cs = state.checks;
+  const cur = cs[cs.length - 1] || null;
+  const prev = cs[cs.length - 2] || null;
+  if (!cur) return null;
+  const fingSet = new Set(cur.following);
+  const ign = new Set(state.ignored);
+  const notBackAll = minus(cur.following, cur.followers);
+  return {
+    cur, prev,
+    unfollowed: prev ? minus(prev.followers, cur.followers).map(n => ({ name: n, stillFollowing: fingSet.has(n) })) : [],
+    newFollowers: prev ? minus(cur.followers, prev.followers) : [],
+    notBack: notBackAll.filter(n => !ign.has(n)).sort(),
+    ignored: [...state.ignored].sort(),
+    folDelta: prev ? cur.followers.length - prev.followers.length : null,
+    fingDelta: prev ? cur.following.length - prev.following.length : null
+  };
+}
+function historyRows(state) {
+  const rows = state.checks.map((c, i) => {
+    const p = state.checks[i - 1];
+    return { check: c, lost: p ? minus(p.followers, c.followers) : [], gained: p ? minus(c.followers, p.followers).length : null };
+  });
+  return rows.reverse();
+}
+/* ==================== CORE END ==================== */
+
+/* ==================== UI ==================== */
+const $ = id => document.getElementById(id);
+function h(tag, attrs, ...kids) {
+  const el = document.createElement(tag);
+  if (attrs) for (const [k, v] of Object.entries(attrs)) {
+    if (v == null || v === false) continue;
+    if (k === 'class') el.className = v;
+    else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v === true ? '' : String(v));
+  }
+  for (const k of kids.flat(Infinity)) {
+    if (k == null || k === false) continue;
+    el.append(k instanceof Node ? k : document.createTextNode(String(k)));
+  }
+  return el;
+}
+const profileUrl = n => 'https://www.instagram.com/' + encodeURIComponent(n) + '/';
+const fmtNum = n => n.toLocaleString('de-DE');
+const fmtDate = ts => new Date(ts).toLocaleString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+let toastTimer;
+function toast(msg, ms = 3200) {
+  const t = $('toast');
+  t.textContent = msg; t.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.hidden = true; }, ms);
+}
+function notices(container, list) {
+  container.replaceChildren();
+  for (const n of list) container.append(h('div', { class: 'notice ' + (n.type || 'info') }, n.text));
+}
+
+/* ---------- Speicher ---------- */
+const store = {
+  ok: false,
+  test() {
+    try {
+      const k = '__wiw_test__';
+      localStorage.setItem(k, '1');
+      const v = localStorage.getItem(k);
+      localStorage.removeItem(k);
+      this.ok = v === '1';
+    } catch (e) { this.ok = false; }
+    return this.ok;
+  },
+  load() {
+    try {
+      const raw = localStorage.getItem(STORE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) { return null; }
+  },
+  save(state) {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); this.ok = true; }
+    catch (e) { this.ok = false; }
+    renderStore();
+    return this.ok;
+  },
+  pref(key, val) {
+    try {
+      if (val === undefined) return localStorage.getItem('werIstWeg.pref.' + key);
+      localStorage.setItem('werIstWeg.pref.' + key, val);
+    } catch (e) { return null; }
+  }
+};
+
+let state = emptyState();
+let pending = null;   // { followers, following, source }
+
+function persist() {
+  const ok = store.save(state);
+  if (!ok) toast('Konnte nicht speichern. Bitte jetzt ein Backup exportieren!', 5000);
+  return ok;
+}
+
+/* ---------- Rendern ---------- */
+function renderStore() {
+  const b = $('storeBadge');
+  b.classList.toggle('bad', !store.ok);
+  b.lastElementChild.textContent = store.ok ? 'Speicher ok' : 'Kein Speicher';
+  b.title = store.ok ? 'Daten werden im Browser gespeichert' : 'Browser-Speicher geht gerade nicht';
+  $('storeWarn').hidden = store.ok;
+}
+
+function deltaEl(d) {
+  if (d == null) return h('span', { class: 'delta zero' }, 'erster Check');
+  if (d === 0) return h('span', { class: 'delta zero' }, '± 0');
+  return h('span', { class: 'delta ' + (d > 0 ? 'up' : 'down') }, (d > 0 ? '+' : '−') + fmtNum(Math.abs(d)));
+}
+
+function renderResult(sum) {
+  $('resultCard').hidden = !sum;
+  $('welcomeCard').hidden = !!sum;
+  if (!sum) return;
+  const box = $('goneBox');
+  box.replaceChildren();
+  if (!sum.prev) {
+    box.append(
+      h('p', { class: 'big-empty' }, 'Erster Check gespeichert ✓'),
+      h('p', { class: 'small muted' }, 'Mach in ein paar Tagen den nächsten Check. Dann siehst du hier, wer weg ist.')
+    );
+  } else if (!sum.unfollowed.length) {
+    box.append(h('p', { class: 'big-empty' }, 'Niemand. Alle noch da. 🎉'));
+  } else {
+    box.append(h('p', { class: 'hero-title' }, sum.unfollowed.length === 1 ? '1 Person ist weg' : sum.unfollowed.length + ' Leute sind weg'));
+    box.append(h('ul', { class: 'gone' }, sum.unfollowed.map(u =>
+      h('li', null,
+        h('a', { href: profileUrl(u.name), target: '_blank', rel: 'noopener noreferrer' }, '@' + u.name),
+        u.stillFollowing ? h('span', { class: 'badge' }, 'du folgst noch') : null)
+    )));
+    box.append(h('p', { class: 'tiny muted', style: 'margin:10px 0 0' }, 'Hinweis: Wer hier auftaucht, kann dir auch einfach nicht mehr folgen, weil der Account gelöscht, deaktiviert oder umbenannt wurde. Tipp auf den Namen zum Nachschauen.'));
+  }
+  const fingTile = h('div', { class: 'tile' },
+    h('div', { class: 'lbl' }, 'Gefolgt', sum.cur.followingCarried ? h('span', { class: 'badge', style: 'margin-left:6px' }, 'übernommen') : null),
+    h('div', { class: 'num' }, fmtNum(sum.cur.following.length)), deltaEl(sum.fingDelta));
+  $('tiles').replaceChildren(
+    h('div', { class: 'tile' }, h('div', { class: 'lbl' }, 'Follower'), h('div', { class: 'num' }, fmtNum(sum.cur.followers.length)), deltaEl(sum.folDelta)),
+    fingTile
+  );
+  const meta = ['Letzter Check: ' + fmtDate(sum.cur.ts)];
+  if (sum.prev && sum.newFollowers.length) meta.push(sum.newFollowers.length + ' neu dazugekommen');
+  $('resultMeta').textContent = meta.join(' · ');
+}
+
+function renderNotBack(sum) {
+  $('notBackCard').hidden = !sum;
+  if (!sum) return;
+  const q = ($('notBackFilter').value || '').trim().toLowerCase().replace(/^@/, '');
+  const list = q ? sum.notBack.filter(n => n.includes(q)) : sum.notBack;
+  $('notBackCount').textContent = '(' + sum.notBack.length + ')';
+  $('notBackFilter').hidden = sum.notBack.length < 12;
+  $('notBackList').replaceChildren(...list.map(n => h('li', null,
+    h('a', { href: profileUrl(n), target: '_blank', rel: 'noopener noreferrer' }, n),
+    h('button', { class: 'sm', onclick: () => setIgnored(n, true), 'aria-label': n + ' ignorieren' }, 'Ignorieren')
+  )));
+  let empty = '';
+  if (!sum.cur.following.length) empty = 'Keine Gefolgt-Liste vorhanden. Lies beim nächsten Check auch following.json ein.';
+  else if (!sum.notBack.length) empty = 'Alle, denen du folgst, folgen dir auch. Nice.';
+  else if (!list.length) empty = 'Kein Treffer.';
+  $('notBackEmpty').textContent = empty;
+  $('notBackEmpty').hidden = !empty;
+
+  $('ignoredSummary').textContent = 'Ignoriert (' + sum.ignored.length + ')';
+  $('ignoredList').replaceChildren(...sum.ignored.map(n => h('li', null,
+    h('a', { href: profileUrl(n), target: '_blank', rel: 'noopener noreferrer' }, n),
+    h('button', { class: 'sm', onclick: () => setIgnored(n, false), 'aria-label': n + ' zurückholen' }, 'Zurückholen')
+  )));
+  if (!sum.ignored.length) $('ignoredList').append(h('li', { class: 'muted small' }, 'Noch niemand ignoriert.'));
+}
+
+function armButton(btn, onConfirm) {
+  if (btn.dataset.armed === '1') { onConfirm(); return; }
+  btn.dataset.armed = '1';
+  const old = btn.textContent;
+  btn.textContent = 'Wirklich?';
+  btn.classList.add('armed');
+  setTimeout(() => {
+    if (!btn.isConnected) return;
+    btn.dataset.armed = '';
+    btn.textContent = old;
+    btn.classList.remove('armed');
+  }, 3500);
+}
+
+function renderHistory() {
+  const rows = historyRows(state);
+  $('historyCard').hidden = !rows.length;
+  $('histList').replaceChildren(...rows.map(r => {
+    const c = r.check;
+    const del = h('button', { class: 'sm danger', 'aria-label': 'Check vom ' + fmtDate(c.ts) + ' löschen' }, 'Löschen');
+    del.addEventListener('click', () => armButton(del, () => {
+      state.checks = state.checks.filter(x => x.id !== c.id);
+      persist(); renderAll(); toast('Check gelöscht');
+    }));
+    return h('li', null,
+      h('div', { class: 'meta' },
+        h('div', null,
+          h('div', { class: 'when' }, fmtDate(c.ts)),
+          h('div', { class: 'small muted' },
+            fmtNum(c.followers.length) + ' Follower · ' + fmtNum(c.following.length) + ' gefolgt' + (c.followingCarried ? ' (übernommen)' : '') + ' · ' + c.source)),
+        del),
+      r.gained == null
+        ? h('div', { class: 'tiny muted', style: 'margin-top:4px' }, 'Erster Check')
+        : h('div', { class: 'chips' },
+            r.lost.length ? r.lost.map(n => h('a', { class: 'chip', href: profileUrl(n), target: '_blank', rel: 'noopener noreferrer' }, n)) : h('span', { class: 'chip plain' }, 'niemand weg'),
+            h('span', { class: 'chip plain' }, '+' + r.gained + ' neu'))
+    );
+  }));
+}
+
+function renderAll() {
+  const sum = summarize(state);
+  renderStore();
+  renderResult(sum);
+  renderNotBack(sum);
+  renderHistory();
+}
+
+function setIgnored(name, on) {
+  const set = new Set(state.ignored);
+  if (on) set.add(name); else set.delete(name);
+  state.ignored = [...set];
+  persist();
+  renderAll();
+  toast(on ? '@' + name + ' wird ignoriert' : '@' + name + ' ist zurück in der Liste');
+}
+
+/* ---------- Tabs ---------- */
+const TABS = ['export', 'text', 'ocr'];
+function selectTab(id) {
+  for (const t of TABS) {
+    $('tab-' + t).setAttribute('aria-selected', String(t === id));
+    $('pane-' + t).hidden = t !== id;
+  }
+}
+for (const t of TABS) $('tab-' + t).addEventListener('click', () => selectTab(t));
+function updateOnline() {
+  const on = navigator.onLine !== false;
+  $('tab-ocr').hidden = !on;
+  if (!on && $('tab-ocr').getAttribute('aria-selected') === 'true') selectTab('export');
+}
+addEventListener('online', updateOnline);
+addEventListener('offline', updateOnline);
+
+/* ---------- Vorschau ---------- */
+function showPreview(p) {
+  pending = p;
+  $('pvSource').textContent = 'Quelle: ' + p.source;
+  $('pvFollowers').value = p.followers.join('\n');
+  $('pvFollowing').value = (p.following || []).join('\n');
+  $('pvExpFol').value = '';
+  $('pvExpFing').value = '';
+  $('previewCard').hidden = false;
+  updatePreview();
+  $('previewCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function updatePreview() {
+  if (!pending) return;
+  const fol = parseTextList($('pvFollowers').value);
+  const fing = parseTextList($('pvFollowing').value);
+  const last = state.checks[state.checks.length - 1];
+  const carry = !fing.length && last && last.following.length;
+  const fingN = carry ? last.following.length : fing.length;
+  $('pvFolN').textContent = fmtNum(fol.length);
+  $('pvFingN').textContent = fmtNum(fingN);
+  $('pvFingNote').replaceChildren(carry ? h('span', { class: 'badge' }, 'übernommen') : (!fing.length ? h('span', { class: 'muted' }, 'keine') : ''));
+  const warns = [];
+  const cmp = (expEl, got, label) => {
+    const v = expEl.value.trim();
+    if (v === '') return;
+    const exp = parseInt(v, 10);
+    if (!isFinite(exp)) return;
+    const d = exp - got;
+    if (d > 0) warns.push({ type: 'warn', text: label + ': ' + d + ' fehl' + (d === 1 ? 't' : 'en') + ' (Profil sagt ' + fmtNum(exp) + ', erkannt ' + fmtNum(got) + ').' });
+    else if (d < 0) warns.push({ type: 'warn', text: label + ': ' + (-d) + ' mehr erkannt als im Profil (' + fmtNum(exp) + ').' });
+    else warns.push({ type: 'ok', text: label + ': passt genau ✓' });
+  };
+  cmp($('pvExpFol'), fol.length, 'Follower');
+  cmp($('pvExpFing'), fingN, 'Gefolgt');
+  if (warns.some(w => w.type === 'warn')) warns.push({ type: 'info', text: 'Kleine Abweichungen sind normal: Instagram zählt teils deaktivierte oder gesperrte Accounts mit.' });
+  if (!fol.length) warns.unshift({ type: 'err', text: 'Keine Follower erkannt. Ohne die kann ich nichts vergleichen.' });
+  notices($('pvWarn'), warns);
+  $('pvSave').disabled = !fol.length;
+}
+for (const id of ['pvFollowers', 'pvFollowing', 'pvExpFol', 'pvExpFing']) $(id).addEventListener('input', updatePreview);
+$('pvCancel').addEventListener('click', () => { pending = null; $('previewCard').hidden = true; });
+$('pvSave').addEventListener('click', () => {
+  if (!pending) return;
+  const check = makeCheck(state, {
+    followers: parseTextList($('pvFollowers').value),
+    following: parseTextList($('pvFollowing').value),
+    source: pending.source
+  });
+  if (!check.followers.length) return;
+  state.checks.push(check);
+  const ok = persist();
+  pending = null;
+  $('previewCard').hidden = true;
+  $('txtFollowers').value = ''; $('txtFollowing').value = '';
+  renderAll();
+  scrollTo({ top: 0, behavior: 'smooth' });
+  if (ok) toast('Check gespeichert ✓');
+  else { toast('Check da, aber nicht dauerhaft gespeichert. Bitte Backup exportieren!', 6000); $('backupCard').scrollIntoView({ behavior: 'smooth' }); }
+});
+
+/* ---------- Export einlesen ---------- */
+$('exportFiles').addEventListener('change', async ev => {
+  const input = ev.target;
+  const files = [...input.files];
+  input.value = '';
+  if (!files.length) return;
+  notices($('exportMsg'), [{ type: 'info', text: 'Lese ' + files.length + (files.length === 1 ? ' Datei' : ' Dateien') + ' …' }]);
+  const wrapped = files.map(f => ({
+    name: f.name, size: f.size,
+    read: async (off, len) => new Uint8Array(await f.slice(off, off + len).arrayBuffer())
+  }));
+  const res = await importFiles(wrapped, inflateRawStream);
+  const msgs = res.notes.slice();
+  if (!res.sawFollowers) msgs.push({ type: 'err', text: 'Keine Follower-Datei gefunden (followers_1.json).' });
+  else if (!res.sawFollowing) msgs.push({ type: 'info', text: 'Keine following.json dabei, die Gefolgt-Liste wird vom letzten Check übernommen.' });
+  notices($('exportMsg'), msgs);
+  if (res.sawFollowers) showPreview({ followers: res.followers, following: res.following, source: 'Export' });
+});
+
+/* ---------- Text einlesen ---------- */
+$('txtGo').addEventListener('click', () => {
+  const fol = parseTextList($('txtFollowers').value);
+  const fing = parseTextList($('txtFollowing').value);
+  if (!fol.length) { notices($('textMsg'), [{ type: 'err', text: 'Ich hab keine gültigen Namen bei den Followern gefunden.' }]); return; }
+  notices($('textMsg'), []);
+  showPreview({ followers: fol, following: fing, source: 'Text' });
+});
+
+/* ---------- Screenshots (tesseract.js, nur online) ---------- */
+const TESSERACT_URL = 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';
+let tessPromise = null;
+function loadTesseract() {
+  if (window.Tesseract) return Promise.resolve(window.Tesseract);
+  if (tessPromise) return tessPromise;
+  tessPromise = new Promise((res, rej) => {
+    const s = document.createElement('script');
+    s.src = TESSERACT_URL;
+    s.crossOrigin = 'anonymous';
+    s.onload = () => window.Tesseract ? res(window.Tesseract) : rej(new Error('nicht geladen'));
+    s.onerror = () => { tessPromise = null; s.remove(); rej(new Error('Download fehlgeschlagen')); };
+    document.head.append(s);
+  });
+  return tessPromise;
+}
+function ocrInputsChanged() {
+  const a = $('ocrFollowers').files.length, b = $('ocrFollowing').files.length;
+  $('ocrFolN').textContent = a ? '(' + a + ')' : '';
+  $('ocrFingN').textContent = b ? '(' + b + ')' : '';
+  $('ocrGo').disabled = !a;
+}
+$('ocrFollowers').addEventListener('change', ocrInputsChanged);
+$('ocrFollowing').addEventListener('change', ocrInputsChanged);
+$('ocrGo').addEventListener('click', async () => {
+  const folFiles = [...$('ocrFollowers').files], fingFiles = [...$('ocrFollowing').files];
+  const all = folFiles.length + fingFiles.length;
+  if (!folFiles.length) return;
+  const bar = $('ocrProg'), status = $('ocrStatus');
+  const setProg = (done, frac) => { bar.firstElementChild.style.width = Math.round(((done + (frac || 0)) / all) * 100) + '%'; };
+  $('ocrGo').disabled = true; bar.hidden = false; setProg(0, 0);
+  notices($('ocrMsg'), []);
+  let worker;
+  try {
+    status.textContent = 'Lade Texterkennung …';
+    const T = await loadTesseract();
+    let done = 0;
+    worker = await T.createWorker('eng', 1, {
+      logger: m => { if (m.status === 'recognizing text') setProg(done, m.progress); }
+    });
+    const run = async list => {
+      let text = '';
+      for (const f of list) {
+        status.textContent = 'Erkenne Bild ' + (done + 1) + ' von ' + all + ' …';
+        const r = await worker.recognize(f);
+        text += '\n' + r.data.text;
+        done++; setProg(done, 0);
+      }
+      return parseOcrText(text);
+    };
+    const fol = await run(folFiles);
+    const fing = await run(fingFiles);
+    status.textContent = 'Fertig. ' + fol.length + ' Follower' + (fingFiles.length ? ', ' + fing.length + ' Gefolgt' : '') + ' erkannt.';
+    notices($('ocrMsg'), [{ type: 'warn', text: 'Bitte unbedingt in der Vorschau unter „Namen ansehen & korrigieren" drüberschauen. Abgeschnittene Namen (mit …) musst du von Hand vervollständigen.' }]);
+    showPreview({ followers: fol, following: fing, source: 'Screenshots' });
+  } catch (e) {
+    status.textContent = '';
+    notices($('ocrMsg'), [{ type: 'err', text: 'Texterkennung hat nicht geklappt (' + (e && e.message || e) + '). Bist du online? Sonst nimm lieber den Export.' }]);
+  } finally {
+    if (worker) { try { await worker.terminate(); } catch (e) { /* egal */ } }
+    bar.hidden = true;
+    ocrInputsChanged();
+  }
+});
+
+/* ---------- Backup ---------- */
+function backupFile() {
+  const payload = { app: 'wer-ist-weg', version: 1, exportedAt: new Date().toISOString(), data: state };
+  const d = new Date();
+  const name = 'wer-ist-weg-backup-' + d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0') + '.json';
+  return { name, blob: new Blob([JSON.stringify(payload, null, 1)], { type: 'application/json' }) };
+}
+$('bkExport').addEventListener('click', () => {
+  const { name, blob } = backupFile();
+  const url = URL.createObjectURL(blob);
+  const a = h('a', { href: url, download: name });
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 10000);
+  toast('Backup erstellt: ' + name);
+});
+(function setupShare() {
+  try {
+    const { name, blob } = backupFile();
+    const f = new File([blob], name, { type: 'application/json' });
+    if (navigator.canShare && navigator.canShare({ files: [f] })) $('bkShare').hidden = false;
+  } catch (e) { /* kein Teilen */ }
+})();
+$('bkShare').addEventListener('click', async () => {
+  const { name, blob } = backupFile();
+  try { await navigator.share({ files: [new File([blob], name, { type: 'application/json' })], title: 'Wer ist weg? Backup' }); }
+  catch (e) { if (e && e.name !== 'AbortError') toast('Teilen ging nicht, nimm „Backup exportieren".'); }
+});
+$('bkImport').addEventListener('change', async ev => {
+  const f = ev.target.files[0];
+  ev.target.value = '';
+  if (!f) return;
+  const panel = $('bkPanel');
+  let incoming;
+  try {
+    const obj = JSON.parse(await f.text());
+    const data = obj && obj.app === 'wer-ist-weg' ? obj.data : obj;
+    if (!data || !Array.isArray(data.checks)) throw new Error('kein Backup dieser App');
+    incoming = sanitizeState(data);
+    incoming.seeded = true;
+  } catch (e) {
+    notices(panel, [{ type: 'err', text: 'Das ist kein gültiges Backup (' + e.message + ').' }]);
+    return;
+  }
+  const done = msg => { panel.replaceChildren(); persist(); renderAll(); toast(msg); };
+  panel.replaceChildren(h('div', { class: 'notice info' },
+    h('p', null, 'Backup gefunden: ' + incoming.checks.length + ' Checks, ' + incoming.ignored.length + ' Ignorierte. Was soll passieren?'),
+    h('div', { class: 'row' },
+      h('button', { class: 'primary grow', onclick: () => { state = mergeStates(state, incoming); done('Zusammengeführt ✓'); } }, 'Zusammenführen'),
+      h('button', { class: 'danger grow', onclick: ev2 => armButton(ev2.currentTarget, () => { state = incoming; done('Ersetzt ✓'); }) }, 'Ersetzen'),
+      h('button', { class: 'ghost grow', onclick: () => panel.replaceChildren() }, 'Abbrechen'))
+  ));
+});
+
+/* ---------- Start ---------- */
+$('notBackFilter').addEventListener('input', () => renderNotBack(summarize(state)));
+(function init() {
+  store.test();
+  const raw = store.load();
+  state = raw ? sanitizeState(raw) : emptyState();
+  if (!state.seeded) { applySeed(state, SEED); if (store.ok) store.save(state); }
+  updateOnline();
+  renderAll();
+
+  const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const standalone = navigator.standalone === true || matchMedia('(display-mode: standalone)').matches;
+  if (isIOS && !standalone && /^https?:$/.test(location.protocol) && store.pref('hideInstallTip') !== '1') $('installTip').hidden = false;
+  $('installTipClose').addEventListener('click', () => { $('installTip').hidden = true; store.pref('hideInstallTip', '1'); });
+
+  if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+    navigator.serviceWorker.register('./sw.js').catch(() => { /* offline-Start geht dann halt nicht */ });
+  }
+})();
+</script>
+</body>
+</html>
